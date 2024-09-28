@@ -1,4 +1,4 @@
-'''
+"""
 Locking constants
 
 Lock types:
@@ -13,47 +13,26 @@ Lock flags:
 Manually unlock, only needed internally
 
 - `UNBLOCK` unlock
-'''
-
+"""
 import enum
 import os
-
-# The actual tests will execute the code anyhow so the following code can
-# safely be ignored from the coverage tests
-if os.name == 'nt':  # pragma: no cover
+if os.name == 'nt':
     import msvcrt
-
-    #: exclusive lock
-    LOCK_EX = 0x1
-    #: shared lock
-    LOCK_SH = 0x2
-    #: non-blocking
-    LOCK_NB = 0x4
-    #: unlock
-    LOCK_UN = msvcrt.LK_UNLCK  # type: ignore
-
-elif os.name == 'posix':  # pragma: no cover
+    LOCK_EX = 1
+    LOCK_SH = 2
+    LOCK_NB = 4
+    LOCK_UN = msvcrt.LK_UNLCK
+elif os.name == 'posix':
     import fcntl
-
-    #: exclusive lock
     LOCK_EX = fcntl.LOCK_EX
-    #: shared lock
     LOCK_SH = fcntl.LOCK_SH
-    #: non-blocking
     LOCK_NB = fcntl.LOCK_NB
-    #: unlock
     LOCK_UN = fcntl.LOCK_UN
-
-else:  # pragma: no cover
+else:
     raise RuntimeError('PortaLocker only defined for nt and posix platforms')
 
-
 class LockFlags(enum.IntFlag):
-    #: exclusive lock
     EXCLUSIVE = LOCK_EX
-    #: shared lock
     SHARED = LOCK_SH
-    #: non-blocking
     NON_BLOCKING = LOCK_NB
-    #: unlock
     UNBLOCK = LOCK_UN
